@@ -53,3 +53,11 @@ module.exports = {
   answerCall,
   endCall,
 }
+function connectToKamailio() {
+  console.log("Connecting to Kamailio...");
+  // implementasi koneksi sebenarnya di sini
+}
+
+module.exports = {
+  connectToKamailio
+};
