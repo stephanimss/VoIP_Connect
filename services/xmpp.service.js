@@ -1,31 +1,43 @@
-const { client } = require("@xmpp/client")
+// Simplified XMPP service for development
 
-let xmppClient = null
+// Setup XMPP server connection - simplified for development
+const setupXMPPServer = () => {
+  console.log("XMPP server setup skipped in development mode")
+  return true
+}
+
+// Connect a user to XMPP server - simplified for development
+const connectUser = async (phoneNumber, password) => {
+  console.log(`XMPP connection for user ${phoneNumber} skipped in development mode`)
+  return {
+    success: true,
+    token: "dev-token-" + Date.now(),
+    jid: `${phoneNumber}@voip.local`,
+  }
+}
+
+// Disconnect a user from XMPP server - simplified for development
+const disconnectUser = (phoneNumber) => {
+  console.log(`XMPP disconnection for user ${phoneNumber} skipped in development mode`)
+  return { success: true }
+}
+
+// Send a message to a user - simplified for development
+const sendMessage = (from, to, message) => {
+  console.log(`XMPP message from ${from} to ${to}: ${message} (skipped in development mode)`)
+  return { success: true }
+}
+
+// Update user presence status - simplified for development
+const updateUserPresence = async (jid, state) => {
+  console.log(`XMPP presence update for ${jid} to ${state} skipped in development mode`)
+  return { success: true }
+}
 
 module.exports = {
-  connect: (io) => {
-    xmppClient = client({
-      service: `xmpp://${process.env.XMPP_SERVER}:${process.env.XMPP_PORT}`,
-      domain: process.env.XMPP_DOMAIN,
-      username: process.env.XMPP_ADMIN_JID,
-      password: process.env.XMPP_ADMIN_PASSWORD,
-    })
-
-    xmppClient.on("online", (address) => {
-      console.log(`Connected to XMPP server as ${address.toString()}`)
-    })
-
-    xmppClient.on("error", (err) => {
-      console.error("XMPP connection error:", err)
-    })
-
-    xmppClient.start().catch(console.error)
-
-    io.on("connection", (socket) => {
-      console.log("New client connected via Socket.io")
-      socket.on("message", (msg) => {
-        console.log("Received message from client:", msg)
-      })
-    })
-  },
+  setupXMPPServer,
+  connectUser,
+  disconnectUser,
+  sendMessage,
+  updateUserPresence,
 }

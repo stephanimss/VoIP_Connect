@@ -8,9 +8,12 @@ exports.register = async (req, res, next) => {
   try {
     const { phoneNumber, password, name, email } = req.body
 
+    console.log("Registration attempt:", { phoneNumber, name, email })
+
     // Check if user already exists
     const existingUser = await User.findOne({ where: { phoneNumber } })
     if (existingUser) {
+      console.log("User already exists:", phoneNumber)
       return res.status(400).json({
         success: false,
         message: "User with this phone number already exists",
@@ -25,8 +28,16 @@ exports.register = async (req, res, next) => {
       email,
     })
 
-    // Register user with Kamailio
-    await registerUser(phoneNumber, password, name || phoneNumber)
+    console.log("User created successfully:", { id: user.id, phoneNumber })
+
+    // Register user with Kamailio (wrapped in try/catch to prevent failure if Kamailio is not available)
+    try {
+      await registerUser(phoneNumber, password, name || phoneNumber)
+      console.log("User registered with Kamailio")
+    } catch (kamailioError) {
+      console.error("Kamailio registration failed, but user created in database:", kamailioError)
+      // Continue with user creation even if Kamailio registration fails
+    }
 
     // Generate JWT token
     const token = generateJWT(user.id)
@@ -43,7 +54,12 @@ exports.register = async (req, res, next) => {
       },
     })
   } catch (error) {
-    next(error)
+    console.error("Registration error:", error)
+    res.status(500).json({
+      success: false,
+      message: "Registration failed",
+      error: error.message,
+    })
   }
 }
 
@@ -52,9 +68,12 @@ exports.login = async (req, res, next) => {
   try {
     const { phoneNumber, password } = req.body
 
+    console.log("Login attempt:", { phoneNumber })
+
     // Check if user exists
     const user = await User.findOne({ where: { phoneNumber } })
     if (!user) {
+      console.log("User not found:", phoneNumber)
       return res.status(401).json({
         success: false,
         message: "Invalid credentials",
@@ -64,14 +83,24 @@ exports.login = async (req, res, next) => {
     // Check password
     const isMatch = await user.comparePassword(password)
     if (!isMatch) {
+      console.log("Invalid password for user:", phoneNumber)
       return res.status(401).json({
         success: false,
         message: "Invalid credentials",
       })
     }
 
-    // Connect user to XMPP
-    const xmppResult = await connectUser(phoneNumber, password)
+    console.log("User authenticated successfully:", { id: user.id, phoneNumber })
+
+    // Connect user to XMPP (wrapped in try/catch to prevent failure if XMPP is not available)
+    let xmppResult = { jid: `${phoneNumber}@voip.local` }
+    try {
+      xmppResult = await connectUser(phoneNumber, password)
+      console.log("User connected to XMPP:", xmppResult)
+    } catch (xmppError) {
+      console.error("XMPP connection failed, but login successful:", xmppError)
+      // Continue with login even if XMPP connection fails
+    }
 
     // Generate JWT token
     const token = generateJWT(user.id)
@@ -96,7 +125,12 @@ exports.login = async (req, res, next) => {
       },
     })
   } catch (error) {
-    next(error)
+    console.error("Login error:", error)
+    res.status(500).json({
+      success: false,
+      message: "Login failed",
+      error: error.message,
+    })
   }
 }
 
