@@ -1,0 +1,515 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "VoIP Integration API",
+    "description": "API collection for VoIP Integration with Kamailio and XMPP",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"phoneNumber\": \"1234567890\",\n    \"password\": \"password123\",\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "description": "Register a new user"
+          },
+          "response": []
+        },
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"phoneNumber\": \"1234567890\",\n    \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Login a user"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "me"]
+            },
+            "description": "Get current user information"
+          },
+          "response": []
+        },
+        {
+          "name": "Logout User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "logout"]
+            },
+            "description": "Logout a user"
+          },
+          "response": []
+        }
+      ],
+      "description": "Authentication endpoints"
+    },
+    {
+      "name": "User Management",
+      "item": [
+        {
+          "name": "Get User Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "profile"]
+            },
+            "description": "Get user profile"
+          },
+          "response": []
+        },
+        {
+          "name": "Update User Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"John Doe Updated\",\n    \"email\": \"john.updated@example.com\",\n    \"address\": \"123 Main St, City, Country\",\n    \"bio\": \"VoIP enthusiast and technology professional.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "profile"]
+            },
+            "description": "Update user profile"
+          },
+          "response": []
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"currentPassword\": \"password123\",\n    \"newPassword\": \"newpassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/change-password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "change-password"]
+            },
+            "description": "Change user password"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Settings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users/settings",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "settings"]
+            },
+            "description": "Get user settings"
+          },
+          "response": []
+        },
+        {
+          "name": "Update User Settings",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"settings\": {\n        \"notifications\": {\n            \"incomingCalls\": true,\n            \"missedCalls\": true,\n            \"systemUpdates\": false,\n            \"vibration\": true,\n            \"sound\": true\n        },\n        \"appearance\": {\n            \"theme\": \"dark\",\n            \"fontSize\": \"medium\",\n            \"language\": \"english\"\n        },\n        \"privacy\": {\n            \"showStatus\": true,\n            \"readReceipts\": true,\n            \"callHistory\": true,\n            \"twoFactorAuth\": false\n        },\n        \"audio\": {\n            \"inputDevice\": \"default\",\n            \"outputDevice\": \"default\",\n            \"volume\": 80,\n            \"noiseReduction\": true,\n            \"echoCancellation\": true\n        },\n        \"video\": {\n            \"camera\": \"default\",\n            \"quality\": \"auto\",\n            \"backgroundBlur\": false,\n            \"mirrorVideo\": true\n        }\n    }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/settings",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "settings"]
+            },
+            "description": "Update user settings"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User by Phone Number",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users/phone/1234567890",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "phone", "1234567890"]
+            },
+            "description": "Get user by phone number"
+          },
+          "response": []
+        },
+        {
+          "name": "Search Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users/search?query=john",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "search"],
+              "query": [
+                {
+                  "key": "query",
+                  "value": "john"
+                }
+              ]
+            },
+            "description": "Search users by phone number or name"
+          },
+          "response": []
+        }
+      ],
+      "description": "User management endpoints"
+    },
+    {
+      "name": "Call Management",
+      "item": [
+        {
+          "name": "Initiate Call",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"callee\": \"9876543210\",\n    \"callType\": \"voice\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/calls/initiate",
+              "host": ["{{base_url}}"],
+              "path": ["api", "calls", "initiate"]
+            },
+            "description": "Initiate a call"
+          },
+          "response": []
+        },
+        {
+          "name": "Answer Call",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"sessionId\": \"abc123\",\n    \"withVideo\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/calls/answer",
+              "host": ["{{base_url}}"],
+              "path": ["api", "calls", "answer"]
+            },
+            "description": "Answer a call"
+          },
+          "response": []
+        },
+        {
+          "name": "End Call",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"sessionId\": \"abc123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/calls/end",
+              "host": ["{{base_url}}"],
+              "path": ["api", "calls", "end"]
+            },
+            "description": "End a call"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Call History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/calls/history",
+              "host": ["{{base_url}}"],
+              "path": ["api", "calls", "history"]
+            },
+            "description": "Get call history"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Call Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/calls/60a1b2c3d4e5f6g7h8i9j0k1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "calls", "60a1b2c3d4e5f6g7h8i9j0k1"]
+            },
+            "description": "Get call details"
+          },
+          "response": []
+        }
+      ],
+      "description": "Call management endpoints"
+    },
+    {
+      "name": "XMPP",
+      "item": [
+        {
+          "name": "Send Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"to\": \"9876543210\",\n    \"message\": \"Hello, how are you?\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/xmpp/message",
+              "host": ["{{base_url}}"],
+              "path": ["api", "xmpp", "message"]
+            },
+            "description": "Send a message via XMPP"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Presence",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"online\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/xmpp/presence",
+              "host": ["{{base_url}}"],
+              "path": ["api", "xmpp", "presence"]
+            },
+            "description": "Update presence status via XMPP"
+          },
+          "response": []
+        }
+      ],
+      "description": "XMPP related endpoints"
+    },
+    {
+      "name": "Kamailio",
+      "item": [
+        {
+          "name": "Register with Kamailio",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"password\": \"password123\",\n    \"displayName\": \"John Doe\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/kamailio/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "kamailio", "register"]
+            },
+            "description": "Register user with Kamailio SIP server"
+          },
+          "response": []
+        }
+      ],
+      "description": "Kamailio related endpoints"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
